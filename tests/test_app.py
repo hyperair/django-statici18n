@@ -20,7 +20,6 @@ except ImportError:
     get_template_from_string = loader.get_template_from_string
 
 
-@pytest.mark.usefixtures("cleandir")
 def test_compile_all(settings):
     out = six.StringIO()
     management.call_command('compilejsi18n', verbosity=1, stdout=out)
@@ -32,7 +31,7 @@ def test_compile_all(settings):
     assert os.path.exists(os.path.join(
         settings.STATIC_ROOT, "jsi18n", "en", "djangojs.js"))
     filename = os.path.join(
-        settings.STATICI18N_ROOT, "jsi18n", "fr", "djangojs.js")
+        settings.STATIC_ROOT, "jsi18n", "fr", "djangojs.js")
     assert os.path.exists(filename)
     with io.open(filename, "r", encoding="utf-8") as fp:
         content = fp.read()
@@ -40,7 +39,6 @@ def test_compile_all(settings):
         assert '"Hello world!": "Bonjour \\u00e0 tous !"' in content
 
 
-@pytest.mark.usefixtures("cleandir")
 def test_compile_locale_not_exists(settings):
     out = six.StringIO()
     management.call_command('compilejsi18n', locale='ar', verbosity=1, stderr=out)
@@ -57,7 +55,6 @@ def test_statici18n_templatetag(settings):
         '<script src="/static/jsi18n/fr/djangojs.js"></script>'
 
 
-@pytest.mark.usefixtures("cleandir")
 def test_inlinei18n_templatetag(settings):
     template = """
     {% load statici18n %}
